@@ -9,7 +9,10 @@ import (
 	"syscall"
 
 	"github.com/PIRSON21/grpc-microservices/microservice-warehouses/internal/config"
+	"github.com/PIRSON21/grpc-microservices/microservice-warehouses/internal/handler"
 	"github.com/PIRSON21/grpc-microservices/microservice-warehouses/internal/logger"
+	"github.com/PIRSON21/grpc-microservices/microservice-warehouses/internal/repository/nop"
+	"github.com/PIRSON21/grpc-microservices/microservice-warehouses/internal/service"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
@@ -32,8 +35,14 @@ func InitServer() {
 
 	log.Debug("Logger initialized successfully")
 
+	// Setup service
+	warehouseService := service.NewWarehouseService(&nop.NOP{})
+
+	// Initialize handlers
+	warehouseHandler := handler.NewWarehouseHandler(warehouseService)
+
 	// Setup router
-	router := setupRouter()
+	router := setupRouter(warehouseHandler)
 	log.Debug("Router setup successfully")
 
 	// Start server
@@ -71,12 +80,20 @@ func InitServer() {
 }
 
 // setupRouter sets up the Gin router.
-func setupRouter() *gin.Engine {
+func setupRouter(warehouseHandler *handler.WarehouseHandler) *gin.Engine {
 	r := gin.Default()
 
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
+
+	apiRoutes := r.Group("/api")
+
+	apiRoutes.GET("/warehouses", warehouseHandler.GetWarehouses)
+
+	apiRoutes.POST("/warehouses", warehouseHandler.CreateWarehouse)
+
+	apiRoutes.GET("/warehouses/:id", warehouseHandler.GetWarehouseByID)
 
 	return r
 }
