@@ -40,5 +40,21 @@ func initPostgresDB(cfg *config.DBConfig) *gorm.DB {
 	if err != nil {
 		panic("failed to connect to PostgreSQL database: " + err.Error())
 	}
+	sql, err := db.DB()
+	if err != nil {
+		panic("failed to get sql.DB from gorm.DB: " + err.Error())
+	}
+	err = sql.Ping()
+	if err != nil {
+		panic("failed to ping PostgreSQL database: " + err.Error())
+	}
 	return db
+}
+
+func (d *DbGorm) Close() error {
+	sqlDB, err := d.db.DB()
+	if err != nil {
+		return err
+	}
+	return sqlDB.Close()
 }

@@ -15,7 +15,8 @@ const (
 
 // Config holds the application configuration.
 type Config struct {
-	Addr         string       `mapstructure:"addr"`
+	GRPCAddr     string       `mapstructure:"grpc_addr"`
+	HTTPAddr     string       `mapstructure:"http_addr"`
 	Env          string       `mapstructure:"env"`
 	LoggerConfig LoggerConfig `mapstructure:",squash"`
 	DBConfig     DBConfig     `mapstructure:",squash"`
@@ -23,7 +24,8 @@ type Config struct {
 
 // setDefaultConfigForViper sets default values for the Config in Viper.
 func setDefaultConfigForViper() {
-	viper.SetDefault("addr", ":8080")
+	viper.SetDefault("http_addr", ":8080")
+	viper.SetDefault("grpc_addr", ":50051")
 	viper.SetDefault("env", EnvProduction)
 }
 
