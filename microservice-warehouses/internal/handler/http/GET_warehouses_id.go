@@ -1,4 +1,4 @@
-package handler
+package http
 
 import (
 	"fmt"
@@ -9,9 +9,9 @@ import (
 )
 
 // GetWarehouseByID handles GET requests to retrieve a warehouse by its ID.
-func (h *WarehouseHandler) GetWarehouseByID(c *gin.Context) {
+func (h *WarehouseHTTPHandler) GetWarehouseByID(c *gin.Context) {
 	log := logrus.WithFields(logrus.Fields{
-		"op":     "handler.WarehouseHandler.GetWarehouseByID",
+		"op":     "handler.WarehouseHTTPHandler.GetWarehouseByID",
 		"path":   c.Request.URL.Path,
 		"method": c.Request.Method,
 	})

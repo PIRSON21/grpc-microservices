@@ -1,4 +1,4 @@
-package handler
+package http
 
 import (
 	"github.com/gin-gonic/gin"
@@ -6,9 +6,9 @@ import (
 )
 
 // GetWarehouses handles GET requests to retrieve a list of warehouses.
-func (h *WarehouseHandler) GetWarehouses(c *gin.Context) {
+func (h *WarehouseHTTPHandler) GetWarehouses(c *gin.Context) {
 	log := logrus.WithFields(logrus.Fields{
-		"op":     "handler.WarehouseHandler.GetWarehouses",
+		"op":     "handler.WarehouseHTTPHandler.GetWarehouses",
 		"path":   c.Request.URL.Path,
 		"method": c.Request.Method,
 	})

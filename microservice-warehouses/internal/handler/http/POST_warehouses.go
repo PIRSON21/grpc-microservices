@@ -1,4 +1,4 @@
-package handler
+package http
 
 import (
 	"net/http"
@@ -9,9 +9,9 @@ import (
 )
 
 // CreateWarehouse handles POST requests to create a new warehouse.
-func (h *WarehouseHandler) CreateWarehouse(c *gin.Context) {
+func (h *WarehouseHTTPHandler) CreateWarehouse(c *gin.Context) {
 	log := logrus.WithFields(logrus.Fields{
-		"op":     "handler.WarehouseHandler.CreateWarehouse",
+		"op":     "handler.WarehouseHTTPHandler.CreateWarehouse",
 		"path":   c.Request.URL.Path,
 		"method": c.Request.Method,
 	})
