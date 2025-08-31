@@ -12,6 +12,23 @@ services:
       - warehouse_data:/var/lib/postgresql/data
     networks:
       - warehouse-network
+  warehouse-app:
+    build:
+      context: microservice-warehouses/
+      dockerfile: deployments/Dockerfile
+    container_name: warehouse-app
+    environment:
+      DB_HOST: warehouse-db
+      DB_PORT: 5432
+      DB_USER: warehouse_user
+      DB_PASSWORD: ${WAREHOUSE_DB_PASSWORD}
+      DB_NAME: warehouse_db
+    ports:
+      - "8081:8080"
+    depends_on:
+      - warehouse-db
+    networks:
+      - warehouse-network
 
 
 
