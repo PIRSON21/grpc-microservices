@@ -18,6 +18,13 @@ type Config struct {
 	Addr         string       `mapstructure:"addr"`
 	Env          string       `mapstructure:"env"`
 	LoggerConfig LoggerConfig `mapstructure:",squash"`
+	DBConfig     DBConfig     `mapstructure:",squash"`
+}
+
+// setDefaultConfigForViper sets default values for the Config in Viper.
+func setDefaultConfigForViper() {
+	viper.SetDefault("addr", ":8080")
+	viper.SetDefault("env", EnvProduction)
 }
 
 func (c *Config) validate() error {
@@ -60,6 +67,14 @@ type LoggerConfig struct {
 	Output string `mapstructure:"output"` // Log output
 }
 
+// setDefaultLoggerConfigForViper sets default values for the LoggerConfig in Viper.
+func setDefaultLoggerConfigForViper() {
+	viper.SetDefault("level", LevelInfo)
+	viper.SetDefault("format", TextFormat)
+	viper.SetDefault("output", OutputConsole)
+}
+
+// validate checks if the configuration values are valid.
 func (c *LoggerConfig) validate() error {
 	if c.Level < LevelDebug || c.Level > LevelFatal {
 		return fmt.Errorf("invalid log level: %d", c.Level)
@@ -67,7 +82,46 @@ func (c *LoggerConfig) validate() error {
 	return nil
 }
 
-// validate checks if the configuration values are valid.
+// Database source constants
+const (
+	PostgresDriver = "postgres" // PostgreSQL driver
+	TestDriver     = "test"     // Test driver
+)
+
+// DBConfig holds the database configuration.
+type DBConfig struct {
+	Driver string `mapstructure:"driver"` // Database driver (e.g., "postgres", "test")
+	Host   string `mapstructure:"host"`   // Database host
+	Port   int    `mapstructure:"port"`   // Database port
+	User   string `mapstructure:"user"`   // Database user
+	Pass   string `mapstructure:"pass"`   // Database password
+	Name   string `mapstructure:"name"`   // Database name
+}
+
+// setDefaultDBConfigForViper sets default values for the DBConfig in Viper.
+func setDefaultDBConfigForViper() {
+	viper.SetDefault("driver", TestDriver)
+	viper.SetDefault("host", "localhost")
+	viper.SetDefault("port", 5432)
+	viper.SetDefault("user", "postgres")
+	viper.SetDefault("pass", "password")
+	viper.SetDefault("name", "warehouses_db")
+}
+
+func (c *DBConfig) validate() error {
+	if c.Driver != PostgresDriver && c.Driver != TestDriver {
+		return fmt.Errorf("invalid db driver: %s", c.Driver)
+	}
+	return nil
+}
+
+func (c *DBConfig) DSN() string {
+	if c.Driver == PostgresDriver {
+		return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+			c.Host, c.Port, c.User, c.Pass, c.Name)
+	}
+	return ""
+}
 
 // MustLoadConfig loads the configuration from the specified path or environment variables.
 func MustLoadConfig(path *string) *Config {
@@ -131,9 +185,7 @@ func loadConfigFromEnv() (*Config, error) {
 
 // loadDefaultValuesForViper sets default values for configuration keys in Viper.
 func loadDefaultValuesForViper() {
-	viper.SetDefault("addr", ":8080")
-	viper.SetDefault("env", EnvProduction)
-	viper.SetDefault("level", LevelInfo)
-	viper.SetDefault("format", TextFormat)
-	viper.SetDefault("output", OutputConsole)
+	setDefaultConfigForViper()
+	setDefaultLoggerConfigForViper()
+	setDefaultDBConfigForViper()
 }

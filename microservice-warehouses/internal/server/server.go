@@ -11,7 +11,7 @@ import (
 	"github.com/PIRSON21/grpc-microservices/microservice-warehouses/internal/config"
 	"github.com/PIRSON21/grpc-microservices/microservice-warehouses/internal/handler"
 	"github.com/PIRSON21/grpc-microservices/microservice-warehouses/internal/logger"
-	"github.com/PIRSON21/grpc-microservices/microservice-warehouses/internal/repository/nop"
+	"github.com/PIRSON21/grpc-microservices/microservice-warehouses/internal/repository/gorm"
 	"github.com/PIRSON21/grpc-microservices/microservice-warehouses/internal/service"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
@@ -35,8 +35,11 @@ func InitServer() {
 
 	log.Debug("Logger initialized successfully")
 
+	// Setup repository
+	dbGorm := gorm.NewDbGorm(&cfg.DBConfig)
+
 	// Setup service
-	warehouseService := service.NewWarehouseService(&nop.NOP{})
+	warehouseService := service.NewWarehouseService(dbGorm)
 
 	// Initialize handlers
 	warehouseHandler := handler.NewWarehouseHandler(warehouseService)
