@@ -36,7 +36,6 @@ fabric.properties
 *.test
 *.out
 go.work
-*
 !/.gitignore
 !*.go
 !go.sum
