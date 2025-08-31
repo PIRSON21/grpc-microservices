@@ -1,0 +1,22 @@
+services:
+  warehouse-db:
+    image: postgres:17.5
+    container_name: warehouse-db
+    environment:
+      POSTGRES_USER: warehouse_user
+      POSTGRES_PASSWORD: ${WAREHOUSE_DB_PASSWORD}
+      POSTGRES_DB: warehouse_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - warehouse_data:/var/lib/postgresql/data
+    networks:
+      - warehouse-network
+
+
+
+volumes:
+    warehouse_data:
+
+networks:
+    warehouse-network:
