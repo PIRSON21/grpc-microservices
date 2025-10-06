@@ -12,6 +12,6 @@ type ProductService struct {
 }
 
 // NewProductService creates a new instance of ProductService.
-func NewProductService(repo repository.ProductRepository) *ProductService {
-	return &ProductService{repo: repo}
+func NewProductService(repo repository.ProductRepository, logger *zerolog.Logger) *ProductService {
+	return &ProductService{repo: repo, logger: logger}
 }

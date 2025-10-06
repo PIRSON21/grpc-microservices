@@ -9,7 +9,7 @@ import (
 
 // GetProduct defines the interface for retrieving products.
 type GetProduct interface {
-	// GetProducts retrieves a list of products based on the provided filter.
+	// GetProducts retrieves a list of products based on the provided ID.
 	GetProducts(context.Context, string) ([]*models.Product, error)
 }
 

@@ -38,10 +38,10 @@ func InitServer() {
 	defer productRepo.Close()
 
 	// Setup service
-	productService := service.NewProductService(productRepo)
+	productService := service.NewProductService(productRepo, log)
 
 	// Initialize handlers
-	warehouseHTTPHandler := httpHandler.NewProductHTTPHandler(productService)
+	warehouseHTTPHandler := httpHandler.NewProductHTTPHandler(productService, log)
 
 	// Setup router
 	router := setupRouter(warehouseHTTPHandler)

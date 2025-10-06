@@ -5,17 +5,18 @@ import (
 
 	"github.com/PIRSON21/grpc-microservices/microservice-products/internal/dto"
 	"github.com/PIRSON21/grpc-microservices/microservice-products/internal/models"
-	"github.com/sirupsen/logrus"
 )
 
 // GetProducts retrieves a list of products based on the provided ID.
 func (s *ProductService) GetProducts(ctx context.Context, id string) ([]*dto.GetProductResponse, error) {
-	log := logrus.WithField("method", "GetProducts")
-	log.Infof("Retrieving products with ID: %s", id)
+	log := s.logger.With().Fields(map[string]any{
+		"method": "GetProducts",
+	}).Logger()
+	log.Info().Msgf("Retrieving products with ID: %s", id)
 
 	products, err := s.repo.GetProducts(ctx, id)
 	if err != nil {
-		log.Errorf("Failed to retrieve products: %v", err)
+		log.Error().Msgf("Failed to retrieve products: %v", err)
 		return nil, err
 	}
 
@@ -25,7 +26,7 @@ func (s *ProductService) GetProducts(ctx context.Context, id string) ([]*dto.Get
 		responses = append(responses, response)
 	}
 
-	log.Infof("Retrieved %d products", len(responses))
+	log.Info().Msgf("Retrieved %d products", len(responses))
 
 	return responses, nil
 }

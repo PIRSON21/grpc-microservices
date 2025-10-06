@@ -2,13 +2,17 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"github.com/PIRSON21/grpc-microservices/microservice-products/internal/dto"
 	"github.com/PIRSON21/grpc-microservices/microservice-products/internal/models"
+	custErr "github.com/PIRSON21/grpc-microservices/microservice-products/pkg/errors"
 )
 
+var ValidationError = errors.New("validation error")
+
 // CreateProduct creates a new product based on the provided request DTO.
-func (s *ProductService) CreateProduct(ctx context.Context, request *dto.CreateProductRequest) (*dto.CreateProductResponse, error) {
+func (s *ProductService) CreateProduct(ctx context.Context, request *dto.CreateProductRequest) (*dto.CreateProductResponse, error, []*custErr.ValidationError) {
 	log := s.logger.With().Fields(map[string]any{
 		"method": "CreateProduct",
 	}).Logger()
@@ -16,18 +20,24 @@ func (s *ProductService) CreateProduct(ctx context.Context, request *dto.CreateP
 
 	product := parseRequestToProduct(request)
 
+	validErr := product.Validate()
+	if len(validErr) > 0 {
+		log.Error().Msg("Product validation failed")
+		return nil, ValidationError, validErr
+	}
+
 	// Create the product in the repository
 	err := s.repo.CreateProduct(ctx, product)
 	if err != nil {
 		log.Error().Msgf("Failed to create product: %v", err)
-		return nil, err
+		return nil, err, nil
 	}
 
 	log.Info().Msgf("Product created with ID: %s", product.ID)
 
 	response := parseProductToResponse(product)
 
-	return response, nil
+	return response, nil, nil
 }
 
 // parseRequestToProduct converts a dto.CreateProductRequest to a models.Product.

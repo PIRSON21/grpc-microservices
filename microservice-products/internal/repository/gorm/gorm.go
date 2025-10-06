@@ -32,8 +32,7 @@ func NewDBGorm(cfg *config.DBConfig) (*DBGorm, error) {
 
 // setupPostgres sets up a PostgreSQL database connection using GORM.
 func setupPostgres(cfg *config.DBConfig) (*DBGorm, error) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
-		cfg.Host, cfg.User, cfg.Pass, cfg.Name, cfg.Port)
+	dsn := cfg.DSN()
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", ErrDBConnection, err)
