@@ -1,11 +1,9 @@
 package http
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/PIRSON21/grpc-microservices/microservice-products/internal/dto"
-	"github.com/PIRSON21/grpc-microservices/microservice-products/internal/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,13 +24,8 @@ func (h *ProductHTTPHandler) CreateProduct(c *gin.Context) {
 		return
 	}
 
-	createdProduct, err, validErr := h.service.CreateProduct(c.Request.Context(), &createRequest)
+	createdProduct, err := h.service.CreateProduct(c.Request.Context(), &createRequest)
 	if err != nil {
-		if errors.Is(err, service.ValidationError) {
-			log.Error().Msg("Product validation failed")
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Validation Error", "details": validErr})
-			return
-		}
 		log.Error().Msgf("Error creating product: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 		return

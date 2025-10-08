@@ -19,6 +19,8 @@ type PostProduct interface {
 	CreateProduct(context.Context, *models.Product) error
 	// DeleteProduct removes a product from the repository by its ID.
 	DeleteProduct(string) error
+	// UpdateProduct modifies an existing product in the repository.
+	UpdateProduct(context.Context, *models.Product) error
 }
 
 // ProductRepository defines the interface for product data operations.

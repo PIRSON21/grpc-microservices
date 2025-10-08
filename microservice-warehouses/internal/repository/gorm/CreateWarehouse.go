@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// CreateWarehouse creates a new warehouse record in the database.
 func (gorm *DbGorm) CreateWarehouse(ctx context.Context, warehouse *db_dto.CreateWarehouseDTO) error {
 	log := logrus.WithFields(logrus.Fields{
 		"op":      "repository.DbGorm.CreateWarehouse",

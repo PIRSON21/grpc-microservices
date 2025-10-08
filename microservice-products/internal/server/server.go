@@ -76,7 +76,7 @@ func setupRouter(warehouseHandler *httpHandler.ProductHTTPHandler) *gin.Engine {
 	apiRoutes.GET("/products", warehouseHandler.GetProducts)
 	apiRoutes.GET("/products/:id", warehouseHandler.GetProductByID)
 	apiRoutes.POST("/products", warehouseHandler.CreateProduct)
-	apiRoutes.PUT("/products/:id", warehouseHandler.UpdateProduct)
+	apiRoutes.PATCH("/products/:id", warehouseHandler.UpdateProduct)
 	apiRoutes.DELETE("/products/:id", warehouseHandler.DeleteProduct)
 
 	return r
