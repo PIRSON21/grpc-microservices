@@ -7,7 +7,8 @@ import (
 	"github.com/PIRSON21/grpc-microservices/microservice-products/internal/models"
 )
 
-func (s *ProductService) UpdateProduct(ctx context.Context, request *dto.UpdateProductRequest) error {
+// UpdateProduct updates an existing product based on the provided dto.UpdateProductRequest.
+func (s *ProductService) UpdateProduct(ctx context.Context, request *dto.UpdateProductRequest) (*dto.CreateProductResponse, error) {
 	log := s.logger.With().Fields(map[string]any{
 		"method": "UpdateProduct",
 	}).Logger()
@@ -20,16 +21,24 @@ func (s *ProductService) UpdateProduct(ctx context.Context, request *dto.UpdateP
 	err := s.repo.UpdateProduct(ctx, product)
 	if err != nil {
 		log.Error().Msgf("Failed to update product: %v", err)
-		return err
+		return nil, err
 	}
 
-	// TODO: доделать метод UpdateProduct (в service и handler)
+	// Retrieve the updated product to return
+	updatedProduct, err := s.repo.GetProducts(ctx, product.ID.String())
+	if err != nil {
+		log.Error().Msgf("Failed to retrieve updated product: %v", err)
+		return nil, err
+	}
+
+	response := parseProductToResponse(updatedProduct[0])
 
 	log.Info().Msgf("Product updated with ID: %s", product.ID)
 
-	return nil
+	return response, nil
 }
 
+// parseUpdateRequestToProduct converts a dto.UpdateProductRequest to a models.Product.
 func parseUpdateRequestToProduct(request *dto.UpdateProductRequest) *models.Product {
 	return &models.Product{
 		ID:          request.ID,

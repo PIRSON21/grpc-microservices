@@ -47,10 +47,16 @@ func (h *ProductHTTPHandler) UpdateProduct(c *gin.Context) {
 		return
 	}
 
-	if err := h.service.UpdateProduct(c.Request.Context(), &payload); err != nil {
-		// TODO: detailed error handling
+	response, err := h.service.UpdateProduct(c.Request.Context(), &payload)
+	if err != nil {
+		if errors.Is(err, custErr.ErrProductNotFound) {
+			log.Info().Msgf("Product not found: %v", err)
+			c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		}
+		log.Error().Msgf("Error updating product: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": "updated"})
-
+	c.JSON(http.StatusOK, response)
 }
