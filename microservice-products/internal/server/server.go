@@ -33,8 +33,7 @@ func InitServer() {
 	log.Debug().Msg("Logger initialized successfully")
 
 	// Setup repository
-	productRepo := repository.NewProductRepository()
-	//dbGorm := gorm.NewDbGorm(&cfg.DBConfig)
+	productRepo := repository.NewProductRepository(&cfg.DBConfig)
 	defer productRepo.Close()
 
 	// Setup service

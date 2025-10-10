@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"github.com/PIRSON21/grpc-microservices/microservice-products/internal/config"
 	"github.com/PIRSON21/grpc-microservices/microservice-products/internal/models"
 	"github.com/PIRSON21/grpc-microservices/microservice-products/internal/repository/fake"
 )
@@ -32,6 +33,6 @@ type ProductRepository interface {
 }
 
 // NewProductRepository creates a new instance of a ProductRepository.
-func NewProductRepository() ProductRepository {
-	return fake.NewFakeProductRepository()
+func NewProductRepository(DBCfg *config.DBConfig) ProductRepository {
+	return fake.NewFakeProductRepository(DBCfg)
 }

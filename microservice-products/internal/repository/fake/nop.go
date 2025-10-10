@@ -1,8 +1,10 @@
 package fake
 
+import "github.com/PIRSON21/grpc-microservices/microservice-products/internal/config"
+
 type Fake struct{}
 
-func NewFakeProductRepository() *Fake {
+func NewFakeProductRepository(_ *config.DBConfig) *Fake {
 	return &Fake{}
 }
 
