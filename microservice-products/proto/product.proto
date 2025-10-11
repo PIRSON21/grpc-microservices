@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package product;
+
+import "google/protobuf/struct.proto";
+
+option go_package = "microservice-products/proto;product";
+
+service ProductService {
+  rpc GetProductByID(GetProductRequest) returns (GetProductResponse);
+}
+
+message GetProductRequest {
+  string id = 1;
+}
+
+message GetProductResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  map<string, google.protobuf.Value> params = 4;
+  float weight = 5;
+  string barCode = 6;
+}
