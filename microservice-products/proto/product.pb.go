@@ -72,7 +72,7 @@ type GetProductResponse struct {
 	Name          string                     `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Description   string                     `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	Params        map[string]*structpb.Value `protobuf:"bytes,4,rep,name=params,proto3" json:"params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	Weight        float32                    `protobuf:"fixed32,5,opt,name=weight,proto3" json:"weight,omitempty"`
+	Weight        float64                    `protobuf:"fixed64,5,opt,name=weight,proto3" json:"weight,omitempty"`
 	BarCode       string                     `protobuf:"bytes,6,opt,name=barCode,proto3" json:"barCode,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -136,7 +136,7 @@ func (x *GetProductResponse) GetParams() map[string]*structpb.Value {
 	return nil
 }
 
-func (x *GetProductResponse) GetWeight() float32 {
+func (x *GetProductResponse) GetWeight() float64 {
 	if x != nil {
 		return x.Weight
 	}
@@ -162,7 +162,7 @@ const file_microservice_products_proto_product_proto_rawDesc = "" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12?\n" +
 	"\x06params\x18\x04 \x03(\v2'.product.GetProductResponse.ParamsEntryR\x06params\x12\x16\n" +
-	"\x06weight\x18\x05 \x01(\x02R\x06weight\x12\x18\n" +
+	"\x06weight\x18\x05 \x01(\x01R\x06weight\x12\x18\n" +
 	"\abarCode\x18\x06 \x01(\tR\abarCode\x1aQ\n" +
 	"\vParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12,\n" +

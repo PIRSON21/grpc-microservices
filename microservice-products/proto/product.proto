@@ -19,6 +19,6 @@ message GetProductResponse {
   string name = 2;
   string description = 3;
   map<string, google.protobuf.Value> params = 4;
-  float weight = 5;
+  double weight = 5;
   string barCode = 6;
 }
