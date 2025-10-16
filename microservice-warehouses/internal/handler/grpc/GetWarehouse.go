@@ -5,6 +5,8 @@ import (
 
 	pb "github.com/PIRSON21/grpc-microservices/microservice-warehouses/proto"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // GetWarehouseByID handles gRPC requests to retrieve a warehouse by its ID.
@@ -17,19 +19,19 @@ func (h *WarehouseHandler) GetWarehouseByID(ctx context.Context, req *pb.GetWare
 	log.Debug("Received gRPC request to get warehouse by ID")
 
 	if req.Id == "" {
-		log.Warn("Received empty ID in request")
-		return &pb.WarehouseResponse{}, nil
+		log.Debug("Received empty ID in request")
+		return nil, status.Error(codes.InvalidArgument, "ID cannot be empty")
 	}
 
 	warehouses, err := h.service.GetWarehouses(ctx, req.Id)
 	if err != nil {
 		log.Errorf("Error retrieving warehouse: %v", err)
-		return nil, err
+		return nil, status.Errorf(codes.Internal, "Failed to retrieve warehouse: %v", err)
 	}
 
 	if len(warehouses) == 0 {
-		log.Warn("No warehouse found with the given ID")
-		return &pb.WarehouseResponse{}, nil
+		log.Debug("No warehouse found with the given ID")
+		return nil, status.Error(codes.NotFound, "Warehouse not found")
 	}
 
 	warehouse := warehouses[0]
